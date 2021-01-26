@@ -16,7 +16,7 @@ public class GetController {
 
     // Localhost:8080/api/getParameter?id=1234&password=abcd 로 매핑(RequestMapping과 다르게 method 지정 불필요)
     @GetMapping("/getParameter")
-    public String getParameter(@RequestParam String id,@RequestParam(name="password") String password){
+    public String getParameter(@RequestParam String id, @RequestParam(name="password") String password){
         System.out.println("id : " +id);
         System.out.println("password : " +password);
 
