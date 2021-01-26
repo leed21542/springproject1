@@ -30,4 +30,5 @@
     }
 ~~~
 
-Code - generate 에서 Getter, Setter 자동 생성 가능
+### 참고
+- Code - generate 에서 Getter, Setter 자동 생성 가능
