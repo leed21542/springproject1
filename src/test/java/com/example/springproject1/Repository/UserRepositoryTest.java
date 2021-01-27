@@ -1,6 +1,7 @@
 package com.example.springproject1.Repository;
 
 import com.example.springproject1.Springproject1ApplicationTests;
+import com.example.springproject1.model.entity.Item;
 import com.example.springproject1.model.entity.User;
 import com.example.springproject1.repository.UserRepository;
 import org.junit.Assert;
@@ -19,6 +20,7 @@ public class UserRepositoryTest extends Springproject1ApplicationTests {
     @Autowired
     private UserRepository userRepository;
 
+    @Test
     public void create(){
         User user = new User();
         user.setAccount("TestUser02");
@@ -31,12 +33,16 @@ public class UserRepositoryTest extends Springproject1ApplicationTests {
         System.out.println("newUser : " + newUser);
     }
 
-
+    @Test
+    @Transactional
     public void read(){
-        Optional<User> user = userRepository.findById(2L); // Optional로 return 시켜줘야 한다.
+        Optional<User> user = userRepository.findById(7L); // Optional로 return 시켜줘야 한다.
 
         user.ifPresent(selectUser ->{ //Optional로 값을 받으면 값이 있으면 실행시키다. (없을수도 있기 때문)
-            System.out.println("user : "+selectUser);
+            selectUser.getOrderDetailList().forEach(detail->{
+                Item item = detail.getItem();
+                System.out.println(item);
+            });
         });
     }
 
@@ -53,7 +59,7 @@ public class UserRepositoryTest extends Springproject1ApplicationTests {
         });
     }
 
-    @Test
+
     @Transactional // 쿼리는 실행되지만 데이터는 그대로 남아있게 한다. (RollBack 기능)
     public void delete(){
 
