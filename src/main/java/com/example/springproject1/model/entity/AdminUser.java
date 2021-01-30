@@ -4,15 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.util.List;
 
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Entity
-public class User { //DB의 user엔티티와 이름이 동일해야 한다.
+public class AdminUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,9 +26,13 @@ public class User { //DB의 user엔티티와 이름이 동일해야 한다.
 
     private String status;
 
-    private String email;
+    private String role;
 
-    private String phoneNumber; //JAVA에서는 Camel Case(대문자로 띄어쓰기), DB에서는 Snake Case(_로 연결) -> 자동으로 매칭해준다.
+    private LocalDateTime lastLoginAt;
+
+    private LocalDateTime passwordUpdatedAt;
+
+    private int loginFailCount;
 
     private LocalDateTime registeredAt;
 
@@ -39,10 +45,4 @@ public class User { //DB의 user엔티티와 이름이 동일해야 한다.
     private LocalDateTime updatedAt;
 
     private String updatedBy;
-
-    // 1 : N
-    /*@OneToMany(fetch = FetchType.LAZY,mappedBy = "user") //order_detaiㅣ의 user와 연결시켜 주겠다.
-    private List<OrderDetail> orderDetailList;
-     */
 }
-

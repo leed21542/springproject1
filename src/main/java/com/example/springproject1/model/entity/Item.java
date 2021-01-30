@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -17,11 +18,29 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String status;
+
     private String name;
+
+    private String title;
+
+    private String content;
 
     private Integer price;
 
-    private String content;
+    private String brandName;
+
+    private LocalDateTime registeredAt;
+
+    private LocalDateTime unregisteredAt;
+
+    private LocalDateTime createdAt;
+
+    private String createdBy;
+
+    private LocalDateTime updatedAt;
+
+    private String updatedBy;
 
     //LAZY = 지연로딩   , EAGER = 즉시로딩
 
@@ -32,6 +51,6 @@ public class Item {
     //EAGER = 조인이 발생한다.
     // -> get 메소드를 호출하지 않아도 모든 테이블과 조인을 통해 SELECT를 즉시 실행하겠다.
     // -> 1 : 1 로 매칭될 때 추천한다.
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "item")
-    private List<OrderDetail> orderDetailList;
+    /*@OneToMany(fetch = FetchType.LAZY,mappedBy = "item")
+    private List<OrderDetail> orderDetailList;*/
 }
