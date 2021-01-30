@@ -36,7 +36,7 @@ public class UserRepositoryTest extends Springproject1ApplicationTests {
     @Test
     @Transactional
     public void read(){
-        Optional<User> user = userRepository.findById(7L); // Optional로 return 시켜줘야 한다.
+        Optional<User> user = userRepository.findByAccount("TestUser02"); // Optional로 return 시켜줘야 한다.
 
         user.ifPresent(selectUser ->{ //Optional로 값을 받으면 값이 있으면 실행시키다. (없을수도 있기 때문)
             selectUser.getOrderDetailList().forEach(detail->{
