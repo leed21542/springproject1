@@ -18,7 +18,7 @@ public class OrderDetailRepositoryTest extends Springproject1ApplicationTests {
     public void create(){
         OrderDetail orderDetail = new OrderDetail();
 
-        orderDetail.setOrderAt(LocalDateTime.now());
+        //orderDetail.setOrderAt(LocalDateTime.now());
 
         //어떤 사람이 샀는가
         //orderDetail.setUserId(7L);

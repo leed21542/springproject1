@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     //여러 가지를 한번에 선택하겠다.
     Optional<User> findByAccountAndEmail(String account,String email);*/
+
+    User findFirstByPhoneNumberOrderByIdDesc(String phoneNumber);
 }

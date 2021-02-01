@@ -4,6 +4,7 @@ import com.example.springproject1.Springproject1ApplicationTests;
 import com.example.springproject1.model.entity.Item;
 import com.example.springproject1.model.entity.User;
 import com.example.springproject1.repository.UserRepository;
+import org.apache.tomcat.jni.Local;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,28 +23,35 @@ public class UserRepositoryTest extends Springproject1ApplicationTests {
 
     @Test
     public void create(){
+        String account = "Test01";
+        String password = "Test01";
+        String status = "REGISTERED";
+        String email = "Test01@gmail.com";
+        String phoneNumber = "010-1111-2222";
+        LocalDateTime registeredAt = LocalDateTime.now();
+        LocalDateTime createdAt = LocalDateTime.now();
+        String createdBy = "AdminServer";
+
         User user = new User();
-        user.setAccount("TestUser02");
-        user.setEmail("leed215422@naver.com");
-        user.setPhoneNumber("010-0111-1111");
-        user.setCreatedAt(LocalDateTime.now());
-        user.setCreatedBy("admin2");
+        user.setAccount(account);
+        user.setPassword(password);
+        user.setStatus(status);
+        user.setEmail(email);
+        user.setPhoneNumber(phoneNumber);
+        user.setRegisteredAt(registeredAt);
+        user.setCreatedAt(createdAt);
+        user.setCreatedBy(createdBy);
 
         User newUser = userRepository.save(user);
-        System.out.println("newUser : " + newUser);
+
+        Assert.assertNotNull(newUser);
     }
 
     @Test
     @Transactional
     public void read(){
-        Optional<User> user = userRepository.findByAccount("TestUser02"); // Optional로 return 시켜줘야 한다.
-
-        user.ifPresent(selectUser ->{ //Optional로 값을 받으면 값이 있으면 실행시키다. (없을수도 있기 때문)
-            selectUser.getOrderDetailList().forEach(detail->{
-                Item item = detail.getItem();
-                System.out.println(item);
-            });
-        });
+        User user = userRepository.findFirstByPhoneNumberOrderByIdDesc("010-1111-2222");
+        Assert.assertNotNull(user);
     }
 
     public void update(){
