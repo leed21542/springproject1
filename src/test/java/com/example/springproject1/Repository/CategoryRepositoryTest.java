@@ -44,6 +44,7 @@ public class CategoryRepositoryTest extends Springproject1ApplicationTests {
             System.out.println(c.getType());
             System.out.println(c.getTitle());
 
+
         });
     }
 }

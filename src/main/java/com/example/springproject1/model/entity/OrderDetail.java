@@ -37,6 +37,10 @@ public class OrderDetail {
 
     private String updatedBy;
 
+    private Long itemId;
+
+    private Long orderGroupId;
+
 
     //N : 1
     //User 테이블과의 연관관계
