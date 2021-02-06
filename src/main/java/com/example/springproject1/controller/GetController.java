@@ -1,6 +1,7 @@
 package com.example.springproject1.controller;
 
 import com.example.springproject1.model.SearchParam;
+import com.example.springproject1.model.network.Header;
 import org.springframework.web.bind.annotation.*;
 
 @RestController //이 곳은 컨트롤러로 이용할 거야
@@ -31,6 +32,13 @@ public class GetController {
         System.out.println(searchParam.getPage());
 
         return searchParam; //json 형태로 출력된다 {"account":"". "email":"", "page":0}
+    }
+
+    @GetMapping("/header")
+    public Header getHeader(){
+
+        // {"resultCode : "OK", "description : OK"}
+        return Header.builder().resultCode("OK").description("OK").build();
     }
 
 }

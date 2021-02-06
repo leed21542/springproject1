@@ -1,15 +1,14 @@
-package com.example.springproject1.Repository;
+package com.example.springproject1.repository;
 
 import com.example.springproject1.Springproject1ApplicationTests;
 import com.example.springproject1.model.entity.Category;
-import com.example.springproject1.repository.CategoryRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-
 public class CategoryRepositoryTest extends Springproject1ApplicationTests {
 
     @Autowired

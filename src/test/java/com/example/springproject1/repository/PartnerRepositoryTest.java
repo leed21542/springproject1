@@ -1,14 +1,13 @@
-package com.example.springproject1.Repository;
+package com.example.springproject1.repository;
 
 import com.example.springproject1.Springproject1ApplicationTests;
 import com.example.springproject1.model.entity.Partner;
-import com.example.springproject1.repository.PartnerRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
-
 public class PartnerRepositoryTest extends Springproject1ApplicationTests {
 
     @Autowired
@@ -39,7 +38,7 @@ public class PartnerRepositoryTest extends Springproject1ApplicationTests {
         partner.setRegisteredAt(registeredAt);
         partner.setCreatedAt(createdAt);
         partner.setCreatedBy(createdBy);
-        partner.setCategoryId(categoryId);
+        //partner.setCategoryId(categoryId);
 
         Partner newPartner = partnerRepository.save(partner);
         Assert.assertNotNull(newPartner);

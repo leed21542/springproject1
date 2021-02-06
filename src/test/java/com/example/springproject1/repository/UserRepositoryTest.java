@@ -1,10 +1,7 @@
-package com.example.springproject1.Repository;
+package com.example.springproject1.repository;
 
 import com.example.springproject1.Springproject1ApplicationTests;
-import com.example.springproject1.model.entity.Item;
 import com.example.springproject1.model.entity.User;
-import com.example.springproject1.repository.UserRepository;
-import org.apache.tomcat.jni.Local;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +20,11 @@ public class UserRepositoryTest extends Springproject1ApplicationTests {
 
     @Test
     public void create(){
-        String account = "Test01";
-        String password = "Test01";
+        String account = "Test06";
+        String password = "Test04";
         String status = "REGISTERED";
         String email = "Test01@gmail.com";
-        String phoneNumber = "010-1111-2222";
+        String phoneNumber = "010-1111-3333";
         LocalDateTime registeredAt = LocalDateTime.now();
         LocalDateTime createdAt = LocalDateTime.now();
         String createdBy = "AdminServer";
@@ -42,6 +39,16 @@ public class UserRepositoryTest extends Springproject1ApplicationTests {
         user.setCreatedAt(createdAt);
         user.setCreatedBy(createdBy);
 
+
+        //@Builder 어노테이션 사용 !! -> 생성자 생성시 파라미터에 몇개의 값이 들어갈지 모르기 때문에 Builder를 사용하여
+        // 간단하게 객체를 생성할 수 있다.
+        User u  = User.builder()
+                .account(account)
+                .password(password)
+                .status(status)
+                .email(email)
+                .build();
+
         User newUser = userRepository.save(user);
 
         Assert.assertNotNull(newUser);
@@ -51,7 +58,31 @@ public class UserRepositoryTest extends Springproject1ApplicationTests {
     @Transactional
     public void read(){
         User user = userRepository.findFirstByPhoneNumberOrderByIdDesc("010-1111-2222");
+
+        //user.setEmail().setPhoneNumber().setStatus(); //Accessors 어노테이션 사용하여 채이팅식으로 객체를 업데이트 시킨다.
+        System.out.println(user);
+            user.getOrderGroupList().forEach(a -> {
+                System.out.println("-------------주문묶음-------------");
+                System.out.println("수령인 : " + a.getRevName());
+                System.out.println("수령지 : " + a.getRevAddress());
+                System.out.println("총금액 : " + a.getTotalPrice());
+                System.out.println("총수량 : " + a.getTotalQuantity());
+
+                System.out.println("-------------주문상세-------------");
+
+                a.getOrderDetailList().forEach(orderDetail -> {
+                    System.out.println("파트너사 이름 : "+orderDetail.getItem().getPartner().getName());
+                    System.out.println("파트너사 카테고리 : "+orderDetail.getItem().getPartner().getCategory().getTitle());
+                    System.out.println("주문 상품 : "+orderDetail.getItem().getName());
+                    System.out.println("고객센터 번호 : "+orderDetail.getItem().getPartner().getCallCenter());
+                    System.out.println("주문의 상태 : " + orderDetail.getStatus());
+                    System.out.println("도착예정일 : " + orderDetail.getArrivalDate());
+
+
+                });
+            });
         Assert.assertNotNull(user);
+
     }
 
     public void update(){

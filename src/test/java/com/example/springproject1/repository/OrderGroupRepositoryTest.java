@@ -1,16 +1,14 @@
-package com.example.springproject1.Repository;
+package com.example.springproject1.repository;
 
 import com.example.springproject1.Springproject1ApplicationTests;
 import com.example.springproject1.model.entity.OrderGroup;
-import com.example.springproject1.repository.OrderGroupRepository;
 import org.junit.Assert;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 public class OrderGroupRepositoryTest extends Springproject1ApplicationTests {
 
     @Autowired
@@ -31,7 +29,7 @@ public class OrderGroupRepositoryTest extends Springproject1ApplicationTests {
         orderGroup.setArrivalDate(LocalDateTime.now());
         orderGroup.setCreatedAt(LocalDateTime.now());
         orderGroup.setCreatedBy("AdminServer");
-        orderGroup.setUserId(1L);
+        //orderGroup.setUserId(01);
 
         OrderGroup newOrderGroup = orderGroupRepository.save(orderGroup);
         Assert.assertNotNull(newOrderGroup);

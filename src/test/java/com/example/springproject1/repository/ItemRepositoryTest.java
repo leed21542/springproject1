@@ -1,16 +1,15 @@
-package com.example.springproject1.Repository;
+package com.example.springproject1.repository;
 
 
 import com.example.springproject1.Springproject1ApplicationTests;
 import com.example.springproject1.model.entity.Item;
-import com.example.springproject1.repository.ItemRepository;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-
 public class ItemRepositoryTest extends Springproject1ApplicationTests {
 
     @Autowired
@@ -28,7 +27,7 @@ public class ItemRepositoryTest extends Springproject1ApplicationTests {
         item.setRegisteredAt(LocalDateTime.now());
         item.setCreatedAt(LocalDateTime.now());
         item.setCreatedBy("Partner01");
-        item.setPartnerId(1L);
+        //item.setPartnerId(1L);
 
         Item newItem = itemRepository.save(item);
         Assert.assertNotNull(newItem);
