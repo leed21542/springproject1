@@ -66,7 +66,7 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
         // 2. id를 이용해 user 데이터를 찾는다.
         Optional<User> optional = userRepository.findById(userApiRequest.getId());
 
-        return optional.map(user->{
+        return optional.map(user->
             // 3. update
             user.setAccount(userApiRequest.getAccount())
                     .setPassword(userApiRequest.getPassword())
@@ -74,11 +74,11 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
                     .setPhoneNumber(userApiRequest.getPhoneNumber())
                     .setEmail(userApiRequest.getEmail())
                     .setRegisteredAt(userApiRequest.getRegisteredAt())
-                    .setUnregisteredAt(userApiRequest.getUnregisteredAt());
-
-            return user;
+                    .setUnregisteredAt(userApiRequest.getUnregisteredAt())
             // 4. userApiResponse
-        })
+
+            //return user;
+        )
                 .map(user -> userRepository.save(user)) // update 실행
                 .map(updateUser -> response(updateUser)) // userApuResponse
                 .orElseGet(()->Header.ERROR("데이터 없음"));
