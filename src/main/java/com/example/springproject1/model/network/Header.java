@@ -28,6 +28,8 @@ public class Header<T> {
 
     private T data; //제너릭으로 지정한 타입의 데이터가 들어간다.
 
+    private Pagination pagination;
+
     // OK
     public static <T> Header<T> OK(){
         return (Header<T>)Header.builder()
@@ -44,6 +46,16 @@ public class Header<T> {
                 .resultCode("OK")
                 .description("OK")
                 .data(data)
+                .build();
+    }
+
+    public static <T> Header<T> OK(T data,Pagination pagination){
+        return (Header<T>)Header.builder()
+                .transactionTime(LocalDateTime.now())
+                .resultCode("OK")
+                .description("OK")
+                .data(data)
+                .pagination(pagination)
                 .build();
     }
 

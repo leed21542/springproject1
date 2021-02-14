@@ -4,15 +4,20 @@ import com.example.springproject1.ifs.CrudInterface;
 import com.example.springproject1.model.entity.User;
 import com.example.springproject1.model.enumclass.UserStatus;
 import com.example.springproject1.model.network.Header;
+import com.example.springproject1.model.network.Pagination;
 import com.example.springproject1.model.network.request.UserApiRequest;
 import com.example.springproject1.model.network.response.UserApiResponse;
 import com.example.springproject1.repository.UserRepository;
 import jdk.javadoc.internal.doclets.formats.html.markup.Head;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserApiLogicService implements CrudInterface<UserApiRequest, UserApiResponse> {
@@ -44,7 +49,7 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
 
         // 3. 생성된 데이터 -> userApiResponse return
 
-        return response(newUser);
+        return Header.OK(response(newUser));
     }
 
     @Override
@@ -55,6 +60,7 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
         Optional<User> optional = userRepository.findById(id);
 
         return optional.map(user -> response(user)) // map : 다른 리턴 형식으로 바꿔준다.
+                .map(Header::OK)
                 .orElseGet(()->Header.ERROR("데이터 없음")); // user가 없다면 뒤 실행
     }
 
@@ -82,6 +88,7 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
         )
                 .map(user -> userRepository.save(user)) // update 실행
                 .map(updateUser -> response(updateUser)) // userApuResponse
+                .map(Header::OK)
                 .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
@@ -105,7 +112,7 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
 
 
 
-    private Header<UserApiResponse> response(User user){
+    private UserApiResponse response(User user){
 
         UserApiResponse userApiResponse = UserApiResponse.builder()
                 .id(user.getId())
@@ -120,6 +127,24 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
 
         // Header + data return
 
-        return Header.OK(userApiResponse);
+        return userApiResponse;
+    }
+
+    public Header<List<UserApiResponse>> search(Pageable pageable) {
+
+        Page<User> users = userRepository.findAll(pageable);
+
+        List<UserApiResponse> userApiResponseList = users.stream()
+                .map(this::response)
+                .collect(Collectors.toList());
+
+        Pagination pagination = Pagination.builder() //페이지 정보를 저장한다.
+                .totalPages(users.getTotalPages())
+                .totalElements(users.getTotalElements())
+                .currentPage(users.getNumber())
+                .currentElements(users.getNumberOfElements())
+                .build();
+
+        return Header.OK(userApiResponseList,pagination);
     }
 }

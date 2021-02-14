@@ -2,15 +2,23 @@ package com.example.springproject1.service;
 
 import com.example.springproject1.ifs.CrudInterface;
 import com.example.springproject1.model.entity.Partner;
+import com.example.springproject1.model.entity.User;
 import com.example.springproject1.model.network.Header;
+import com.example.springproject1.model.network.Pagination;
 import com.example.springproject1.model.network.request.PartnerRequest;
 import com.example.springproject1.model.network.response.PartnerResponse;
+import com.example.springproject1.model.network.response.UserApiResponse;
 import com.example.springproject1.repository.CategoryRepository;
 import com.example.springproject1.repository.PartnerRepository;
+import jdk.javadoc.internal.doclets.formats.html.markup.Head;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PartnerApiLogicService implements CrudInterface<PartnerRequest, PartnerResponse> {
@@ -40,7 +48,7 @@ public class PartnerApiLogicService implements CrudInterface<PartnerRequest, Par
                 .build();
 
         Partner newPartner = partnerRepository.save(partner);
-        return response(newPartner);
+        return Header.OK(response(newPartner));
     }
 
     @Override
@@ -48,6 +56,7 @@ public class PartnerApiLogicService implements CrudInterface<PartnerRequest, Par
 
         return partnerRepository.findById(id)
                 .map(this::response)
+                .map(Header::OK)
                 .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
@@ -70,6 +79,7 @@ public class PartnerApiLogicService implements CrudInterface<PartnerRequest, Par
                 })
                 .map(newPartner -> partnerRepository.save(newPartner))
                 .map(this::response)
+                .map(Header::OK)
                 .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
@@ -84,7 +94,7 @@ public class PartnerApiLogicService implements CrudInterface<PartnerRequest, Par
                 .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
-    public Header<PartnerResponse> response(Partner partner){
+    public PartnerResponse response(Partner partner){
 
         PartnerResponse body = PartnerResponse.builder()
                 .id(partner.getId())
@@ -99,6 +109,24 @@ public class PartnerApiLogicService implements CrudInterface<PartnerRequest, Par
                 .categoryId(partner.getCategory().getId())
                 .build();
 
-        return Header.OK(body);
+        return body;
+    }
+
+    public Header<List<PartnerResponse>> search(Pageable pageable) {
+
+        Page<Partner> partners = partnerRepository.findAll(pageable);
+
+        List<PartnerResponse> partnerResponseList = partners.stream()
+                .map(this::response)
+                .collect(Collectors.toList());
+
+        Pagination pagination = Pagination.builder() //페이지 정보를 저장한다.
+                .totalPages(partners.getTotalPages())
+                .totalElements(partners.getTotalElements())
+                .currentPage(partners.getNumber())
+                .currentElements(partners.getNumberOfElements())
+                .build();
+
+        return Header.OK(partnerResponseList,pagination);
     }
 }
