@@ -1,5 +1,6 @@
 package com.example.springproject1.model.entity;
 
+import com.example.springproject1.model.enumclass.UserStatus;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedBy;
@@ -31,7 +32,8 @@ public class User { //DB의 user엔티티와 이름이 동일해야 한다.
 
     private String password;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status; //ENUM 으로 표현해준다.
 
     private String email;
 

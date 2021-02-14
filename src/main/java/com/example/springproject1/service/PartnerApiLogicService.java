@@ -87,6 +87,7 @@ public class PartnerApiLogicService implements CrudInterface<PartnerRequest, Par
     public Header<PartnerResponse> response(Partner partner){
 
         PartnerResponse body = PartnerResponse.builder()
+                .id(partner.getId())
                 .name(partner.getName())
                 .status(partner.getStatus())
                 .address(partner.getAddress())

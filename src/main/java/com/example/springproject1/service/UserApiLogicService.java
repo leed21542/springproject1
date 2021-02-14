@@ -2,6 +2,7 @@ package com.example.springproject1.service;
 
 import com.example.springproject1.ifs.CrudInterface;
 import com.example.springproject1.model.entity.User;
+import com.example.springproject1.model.enumclass.UserStatus;
 import com.example.springproject1.model.network.Header;
 import com.example.springproject1.model.network.request.UserApiRequest;
 import com.example.springproject1.model.network.response.UserApiResponse;
@@ -33,7 +34,7 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
         User user = User.builder()
                 .account(userApiRequest.getAccount())
                 .password(userApiRequest.getPassword())
-                .status("REGISTERED")
+                .status(UserStatus.REGISTERED)
                 .phoneNumber(userApiRequest.getPhoneNumber())
                 .email(userApiRequest.getEmail())
                 .registeredAt(LocalDateTime.now())

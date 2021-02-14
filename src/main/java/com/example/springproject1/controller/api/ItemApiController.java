@@ -1,6 +1,8 @@
 package com.example.springproject1.controller.api;
 
+import com.example.springproject1.controller.CrudController;
 import com.example.springproject1.ifs.CrudInterface;
+import com.example.springproject1.model.entity.Item;
 import com.example.springproject1.model.network.Header;
 import com.example.springproject1.model.network.request.ItemApiRequest;
 import com.example.springproject1.model.network.response.ItemApiResponse;
@@ -9,37 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
+import javax.swing.text.html.parser.Entity;
+
 @RestController
 @RequestMapping("/api/item")
-public class ItemApiController implements CrudInterface<ItemApiRequest, ItemApiResponse> {
+public class ItemApiController extends CrudController<ItemApiRequest, ItemApiResponse, Item> {
 
-    @Autowired
-    private ItemApiLogicService itemApiLogicService;
-
-    @Override
-    @PostMapping("")
-    public Header<ItemApiResponse> create(@RequestBody Header<ItemApiRequest> request) {
-        return itemApiLogicService.create(request);
-    }
-
-    @Override
-    @GetMapping("{id}")
-    public Header<ItemApiResponse> read(@PathVariable Long id) {
-
-        return itemApiLogicService.read(id);
-    }
-
-    @Override
-    @PutMapping("")
-    public Header<ItemApiResponse> update(@RequestBody Header<ItemApiRequest> request) {
-
-        return itemApiLogicService.update(request);
-    }
-
-    @Override
-    @DeleteMapping("{id}")
-    public Header delete(@PathVariable Long id) {
-
-        return itemApiLogicService.delete(id);
-    }
 }
