@@ -2,14 +2,21 @@ package com.example.springproject1.service;
 
 import com.example.springproject1.ifs.CrudInterface;
 import com.example.springproject1.model.entity.AdminUser;
+import com.example.springproject1.model.entity.User;
 import com.example.springproject1.model.network.Header;
+import com.example.springproject1.model.network.Pagination;
 import com.example.springproject1.model.network.request.AdminUserRequest;
 import com.example.springproject1.model.network.response.AdminUserResponse;
+import com.example.springproject1.model.network.response.UserApiResponse;
 import com.example.springproject1.repository.AdminUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminUserApiLogicService implements CrudInterface<AdminUserRequest, AdminUserResponse> {
@@ -31,7 +38,7 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserRequest,
                 .build();
 
         AdminUser newAdminUser = adminUserRepository.save(adminUser);
-        return response(newAdminUser);
+        return Header.OK(response(newAdminUser));
     }
 
     @Override
@@ -39,6 +46,7 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserRequest,
 
         return adminUserRepository.findById(id)
                 .map(this::response)
+                .map(Header::OK)
                 .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
@@ -57,6 +65,7 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserRequest,
                 })
                 .map(newAdminUser -> adminUserRepository.save(newAdminUser))
                 .map(this::response)
+                .map(Header::OK)
                 .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
@@ -71,7 +80,7 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserRequest,
                 .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
-    public Header<AdminUserResponse> response(AdminUser adminUser){
+    public AdminUserResponse response(AdminUser adminUser){
 
         AdminUserResponse body = AdminUserResponse.builder()
                 .id(adminUser.getId())
@@ -81,6 +90,24 @@ public class AdminUserApiLogicService implements CrudInterface<AdminUserRequest,
                 .role(adminUser.getRole())
                 .registeredAt(adminUser.getRegisteredAt())
                 .build();
-        return Header.OK(body);
+        return body;
+    }
+
+    public Header<List<AdminUserResponse>> search(Pageable pageable) {
+
+        Page<AdminUser> adminUsers = adminUserRepository.findAll(pageable);
+
+        List<AdminUserResponse> adminUserResponseList = adminUsers.stream()
+                .map(this::response)
+                .collect(Collectors.toList());
+
+        Pagination pagination = Pagination.builder() //페이지 정보를 저장한다.
+                .totalPages(adminUsers.getTotalPages())
+                .totalElements(adminUsers.getTotalElements())
+                .currentPage(adminUsers.getNumber())
+                .currentElements(adminUsers.getNumberOfElements())
+                .build();
+
+        return Header.OK(adminUserResponseList,pagination);
     }
 }

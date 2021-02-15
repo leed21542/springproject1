@@ -4,11 +4,19 @@ import com.example.springproject1.ifs.CrudInterface;
 import com.example.springproject1.model.network.Header;
 import com.example.springproject1.model.network.request.CategoryRequest;
 import com.example.springproject1.model.network.response.CategoryResponse;
+import com.example.springproject1.model.network.response.UserApiResponse;
 import com.example.springproject1.service.CategoryApiLogicService;
 import jdk.javadoc.internal.doclets.formats.html.markup.Head;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/category")
 public class CategoryApiController implements CrudInterface<CategoryRequest, CategoryResponse> {
@@ -16,6 +24,11 @@ public class CategoryApiController implements CrudInterface<CategoryRequest, Cat
     @Autowired
     private CategoryApiLogicService categoryApiLogicService;
 
+    @GetMapping("")
+    public Header<List<CategoryResponse>> search(@PageableDefault(sort="id",direction = Sort.Direction.ASC,size=15) Pageable pageable){
+        log.info("{}",pageable);
+        return categoryApiLogicService.search(pageable);
+    }
 
     @Override
     @PostMapping("")
