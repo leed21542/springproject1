@@ -2,17 +2,24 @@ package com.example.springproject1.service;
 
 import com.example.springproject1.ifs.CrudInterface;
 import com.example.springproject1.model.entity.OrderDetail;
+import com.example.springproject1.model.entity.User;
 import com.example.springproject1.model.network.Header;
+import com.example.springproject1.model.network.Pagination;
 import com.example.springproject1.model.network.request.OrderDetailRequest;
 import com.example.springproject1.model.network.response.OrderDetailResponse;
+import com.example.springproject1.model.network.response.UserApiResponse;
 import com.example.springproject1.repository.ItemRepository;
 import com.example.springproject1.repository.OrderDetailRepository;
 import com.example.springproject1.repository.OrderGroupRepository;
 import com.example.springproject1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderDetailLogicService implements CrudInterface<OrderDetailRequest, OrderDetailResponse> {
@@ -43,7 +50,7 @@ public class OrderDetailLogicService implements CrudInterface<OrderDetailRequest
 
         OrderDetail newOrderDetail = orderDetailRepository.save(orderDetail);
 
-        return response(newOrderDetail);
+        return Header.OK(response(newOrderDetail));
     }
 
     @Override
@@ -51,6 +58,7 @@ public class OrderDetailLogicService implements CrudInterface<OrderDetailRequest
 
         return orderDetailRepository.findById(id)
                 .map(this::response)
+                .map(Header::OK)
                 .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
@@ -72,6 +80,7 @@ public class OrderDetailLogicService implements CrudInterface<OrderDetailRequest
                 })
                 .map(newOrderDetail -> orderDetailRepository.save(newOrderDetail))
                 .map(this::response)
+                .map(Header::OK)
                 .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
@@ -86,9 +95,10 @@ public class OrderDetailLogicService implements CrudInterface<OrderDetailRequest
                 .orElseGet(()->Header.ERROR("데이터 없음"));
     }
 
-    public Header<OrderDetailResponse> response(OrderDetail orderDetail){
+    public OrderDetailResponse response(OrderDetail orderDetail){
 
         OrderDetailResponse body = OrderDetailResponse.builder()
+                .id(orderDetail.getId())
                 .status(orderDetail.getStatus())
                 .arrivalDate(LocalDateTime.now())
                 .quantity(orderDetail.getQuantity())
@@ -97,6 +107,24 @@ public class OrderDetailLogicService implements CrudInterface<OrderDetailRequest
                 .orderGroupId(orderDetail.getOrderGroup().getId())
                 .build();
 
-        return Header.OK(body);
+        return body;
+    }
+
+    public Header<List<OrderDetailResponse>> search(Pageable pageable) {
+
+        Page<OrderDetail> orderDetails = orderDetailRepository.findAll(pageable);
+
+        List<OrderDetailResponse> orderDetailResponseList = orderDetails.stream()
+                .map(this::response)
+                .collect(Collectors.toList());
+
+        Pagination pagination = Pagination.builder() //페이지 정보를 저장한다.
+                .totalPages(orderDetails.getTotalPages())
+                .totalElements(orderDetails.getTotalElements())
+                .currentPage(orderDetails.getNumber())
+                .currentElements(orderDetails.getNumberOfElements())
+                .build();
+
+        return Header.OK(orderDetailResponseList,pagination);
     }
 }
