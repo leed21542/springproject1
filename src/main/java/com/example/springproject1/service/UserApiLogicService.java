@@ -1,6 +1,7 @@
 package com.example.springproject1.service;
 
 import com.example.springproject1.ifs.CrudInterface;
+import com.example.springproject1.model.entity.OrderDetail;
 import com.example.springproject1.model.entity.OrderGroup;
 import com.example.springproject1.model.entity.User;
 import com.example.springproject1.model.enumclass.UserStatus;
@@ -170,7 +171,7 @@ public class UserApiLogicService implements CrudInterface<UserApiRequest, UserAp
                     OrderGroupApiResponse orderGroupApiResponse = Header.OK((orderGroupApiLogicService.response(orderGroup))).getData();
 
                     List<ItemApiResponse> itemApiResponseList = orderGroup.getOrderDetailList().stream()
-                            .map(detail -> detail.getItem())
+                            .map(OrderDetail::getItem)
                             .map(item -> Header.OK(itemApiLogicService.response(item)).getData())
                             .collect(Collectors.toList());
 
