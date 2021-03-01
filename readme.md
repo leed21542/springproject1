@@ -21,7 +21,7 @@ Spring Boot 첫 프로젝트로 Admin 페이지를 구현했습니다. <br>
 
 ## ERD 설계
 <p align = "center">
-<img src = "/images/erd.JPG" width = "800" height = "800"></img>
+<img src = "/images/erd.jpeg" width = "800" height = "800"></img>
 </p>
 
 <br>
@@ -29,7 +29,7 @@ Spring Boot 첫 프로젝트로 Admin 페이지를 구현했습니다. <br>
 ## 화면 구성
 - Admin 페이지
 <p align = "center">
-    <img src = "/images/admin.JPG" width = "800" height = "500"></img>
+    <img src = "/images/admin.jpeg" width = "800" height = "500"></img>
 </p>
 
 <br>
